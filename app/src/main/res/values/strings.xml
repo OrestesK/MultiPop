@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">MultiPop</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="start_computation">Start computation</string>
+    <string name="do_api_requests">Do API requests</string>
+    <string name="multipop">MultiPop!</string>
+</resources>
