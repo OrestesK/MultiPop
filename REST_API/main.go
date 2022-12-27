@@ -24,7 +24,7 @@ func main() {
 func getUsers(c *gin.Context) {
 	users := DBGetUsers()
 	if users != nil || len(users) != 0 {
-		c.IndentedJSON(http.StatusOK, users)
+		c.JSON(http.StatusOK, users)
 	} else {
 		c.AbortWithStatus(http.StatusNotFound)
 	}
@@ -34,7 +34,7 @@ func getUsers(c *gin.Context) {
 func getSounds(c *gin.Context) {
 	sounds := DBGetSounds()
 	if sounds != nil || len(sounds) != 0 {
-		c.IndentedJSON(http.StatusOK, sounds)
+		c.JSON(http.StatusOK, sounds)
 	} else {
 		c.AbortWithStatus(http.StatusNotFound)
 	}
@@ -44,7 +44,7 @@ func getSounds(c *gin.Context) {
 func getUserByUserName(c *gin.Context) {
 	user := DBGetUserByUserName(c.Param("username"))
 	if user != nil {
-		c.IndentedJSON(http.StatusOK, user)
+		c.JSON(http.StatusOK, user)
 	} else {
 		c.AbortWithStatus(http.StatusNotFound)
 	}
@@ -54,7 +54,7 @@ func getUserByUserName(c *gin.Context) {
 func getSoundsByPosterUserName(c *gin.Context) {
 	sounds := DBGetSoundsByPosterUserName(c.Param("username"))
 	if sounds != nil || len(sounds) == 0 {
-		c.IndentedJSON(http.StatusOK, sounds)
+		c.JSON(http.StatusOK, sounds)
 	} else {
 		c.AbortWithStatus(http.StatusNotFound)
 	}
@@ -67,7 +67,7 @@ func postUser(c *gin.Context) {
 		c.AbortWithStatus(http.StatusBadRequest)
 	} else {
 		DBAddUser(usr)
-		c.IndentedJSON(http.StatusCreated, usr)
+		c.JSON(http.StatusCreated, usr)
 	}
 }
 
@@ -77,6 +77,6 @@ func postSound(c *gin.Context) {
 		c.AbortWithStatus(http.StatusBadRequest)
 	} else {
 		DBAddSound(snd)
-		c.IndentedJSON(http.StatusCreated, snd)
+		c.JSON(http.StatusCreated, snd)
 	}
 }

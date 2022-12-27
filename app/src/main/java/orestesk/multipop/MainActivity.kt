@@ -5,70 +5,114 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import orestesk.multipop.SoundService
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.math.BigInteger
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 import java.util.*
 import kotlin.system.measureTimeMillis
 
 private const val TAG = "MainActivity"
-private const val BASE_URL = "https://jsonplaceholder.typicode.com"
-
-data class Post(val id: Int, val userId: Int, val title: String)
-data class User(val id: Int, val name: String, val email: String)
 
 class MainActivity : AppCompatActivity() {
+    private val retrofit = Instances.RetrofitInstance.getInstance()
+    private val apiInterface: SoundService = retrofit.create(SoundService::class.java)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        Log.i(TAG, "onCreate current thread: ${Thread.currentThread().name}")
-        btnNetwork.setOnClickListener {
+        btnGet.setOnClickListener {
             doApiRequests()
         }
 
-        btnCompute.setOnClickListener {
+        btnPost.setOnClickListener {
             lifecycleScope.launch(Dispatchers.Main) {
                 progressBar.visibility = View.VISIBLE
-                val timeTaken = doExpensiveWork()
                 progressBar.visibility = View.INVISIBLE
-                textView.text = timeTaken
+                textView.text = "HUH"
             }
         }
     }
 
+    /*
     private suspend fun doExpensiveWork() = withContext(Dispatchers.Default) {
         Log.i(TAG, "doExpensiveWork coroutine thread: ${Thread.currentThread().name}")
         val timeTakenMillis = measureTimeMillis { BigInteger.probablePrime(2200, Random()) }
         "Time taken (ms): $timeTakenMillis"
     }
 
+     */
+
+
     private fun doApiRequests() {
-        val retrofit = Retrofit.Builder().baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create()).build()
-        val blogService = retrofit.create(SoundService::class.java)
-        // Lifecycle scope is already bound to Dispatchers.Main.immediate, so no need to specify it
-        CoroutineScope(Dispatchers.Main).launch {
-            Log.i(TAG, "doApiRequests coroutine thread: ${Thread.currentThread().name}")
+        lifecycleScope.launchWhenCreated {
             try {
-                val blogPost = blogService.getPost(ID++)
-                Log.i(TAG, ID.toString())
-                val user = blogService.getUser(blogPost.userId)
-                val postsByUser = blogService.getPostsByUser(user.id)
-                textView.text = "User ${user.name} made ${postsByUser.size} posts"
+                //val usr: User = User(uid = null, username = "", userpassword = "kotlinpass")
+                //apiInterface.postUser(usr)
+
+                val userResponse = apiInterface.getUserByUsername("TestUser")
+                //val postsByUser = blogService.getSoundsByPosterUserName("TestUser")
+
+                println(userResponse.body())
+                if (userResponse.isSuccessful){
+                    "User ${userResponse.body()?.UserName} ${userResponse.body()?.UserPassword}".also { textView.text = it }
+                }
+
             } catch (exception: Exception) {
                 Log.e(TAG, "Exception $exception")
             }
         }
     }
 
-    companion object{
-        var ID = 2
+    private suspend fun createUser(uid: Int, username: String, tempPassword: String){
+        val creationResponse = apiInterface.postUser(User(uid, username, hashSha256(tempPassword)))
+
+        if(creationResponse.isSuccessful){
+
+        }
+        else{
+            println("INVALID USER OR USERNAME ALREADY TAKEN")
+        }
+
     }
+
+    private suspend fun createSound(uid: Int, postUserName: String, soundName: String, description: String, datetime: String, length: String, file : ByteArray){
+        val creationResponse = apiInterface.postSound(Sound(uid ,postUserName, soundName, description, datetime, length, file))
+
+        if(creationResponse.isSuccessful){
+
+        }
+        else{
+            println("INVALID SOUND OR SOUNDNAME ALREADY TAKEN")
+        }
+
+    }
+
+    private fun hashSha256(string: String): String {
+        var digest: MessageDigest? = null
+        var hash = ""
+        try {
+            digest = MessageDigest.getInstance("SHA-256")
+            digest.update(string.toByteArray())
+            val bytes: ByteArray = digest.digest()
+            val sb = StringBuffer()
+            for (i in bytes.indices) {
+                val hex = Integer.toHexString(0xFF and bytes[i].toInt())
+                if (hex.length == 1) {
+                    sb.append('0')
+                }
+                sb.append(hex)
+            }
+            hash = sb.toString()
+        } catch (e1: NoSuchAlgorithmException) {
+            e1.printStackTrace()
+        }
+        return hash
+    }
+
 }

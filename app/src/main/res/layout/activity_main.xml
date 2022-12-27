@@ -17,14 +17,14 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
 
     <Button
-        android:id="@+id/btnNetwork"
+        android:id="@+id/btnGet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/do_api_requests"
         />
 
     <Button
-        android:id="@+id/btnCompute"
+        android:id="@+id/btnPost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/start_computation"
