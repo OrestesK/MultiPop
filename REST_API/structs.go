@@ -6,7 +6,6 @@ import (
 	"os"
 )
 
-// this will never be called as the password has to come to here already hashed
 func hash(val string) string {
 	sha := sha256.New()
 	sha.Write([]byte(val))

@@ -13,3 +13,4 @@
 .externalNativeBuild
 .cxx
 local.properties
+/REST_API/database.go

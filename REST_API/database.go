@@ -3,28 +3,16 @@ package main
 import (
 	"database/sql"
 	"fmt"
+
 	_ "github.com/go-sql-driver/mysql"
 )
 
-const dbuser =  //database username
-const dbpass =  //database user password
-const dbname =  //database name
+const dbuser = //
+const dbpass = //
+const dbname = //
 
 var db = OpenDatabase()
 
-func aamain() {
-	var version string
-	db.QueryRow("SELECT VERSION()").Scan(&version)
-	fmt.Println("Connected to:", version)
-
-	test1 := DBGetUsers()
-	fmt.Println(test1)
-
-	test2 := DBGetUserByUserName("TesttUser")
-	if test2 != nil {
-		fmt.Println(test2.UserPassword)
-	}
-}
 func OpenDatabase() *sql.DB {
 	db, err := sql.Open("mysql", dbuser+":"+dbpass+"@tcp(localhost)/"+dbname)
 	if err != nil {
@@ -121,7 +109,7 @@ func DBGetSoundsByPosterUserName(username string) []Sound {
 }
 
 func DBAddUser(usr User) {
-	_, err := db.Exec("INSERT INTO Users (UserName, UserPassword) VALUES (?, ?)", usr.UserName, usr.UserPassword)
+	_, err := db.Exec("INSERT INTO Users (UserName, UserPassword) VALUES (?, ?)", usr.UserName, hash(usr.UserPassword))
 	if err != nil {
 		panic(err.Error())
 	}
