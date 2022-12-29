@@ -1,5 +1,6 @@
 *.iml
 .gradle
+/REST_API/database.go
 /local.properties
 /.idea/caches
 /.idea/libraries
