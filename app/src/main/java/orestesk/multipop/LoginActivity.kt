@@ -23,10 +23,13 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        LoginActivity.appContext = applicationContext
+
         emailField = findViewById(R.id.emailField)
         passwordField = findViewById(R.id.passwordField)
 
         btn_login.setOnClickListener {
+            //startActivity(Intent(this@LoginActivity, MainActivity::class.java))
             if(LoginActivity.validateInput(emailField, passwordField)){
                 login()
             }
@@ -56,6 +59,7 @@ class LoginActivity : AppCompatActivity() {
                 if (hashSha256(password) == usr.UserPassword) {
                     Toast.makeText(this@LoginActivity, "Wrong Password", Toast.LENGTH_SHORT).show()
                 } else{
+                    LoginActivity.usr = usr
                     Toast.makeText(this@LoginActivity, "Login Successful", Toast.LENGTH_SHORT).show()
                     startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                 }
@@ -65,6 +69,9 @@ class LoginActivity : AppCompatActivity() {
 
 
     companion object{
+        lateinit var usr : User
+        lateinit  var appContext: Context
+
         fun validateInput(email: EditText, password:EditText): Boolean {
             if (email.text.toString().trim() == "") {
                 email.error = "Please Enter Email"

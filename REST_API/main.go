@@ -17,7 +17,7 @@ func main() {
 	router.GET("/sounds/:posterusername", getSoundsByPosterUserName)
 	router.POST("/sounds", postSound)
 
-	router.Run("0.0.0.0:8080")
+	router.RunTLS("0.0.0.0:8080", "https/cert.crt", "https/key.key")
 }
 
 // return GETS all Users
