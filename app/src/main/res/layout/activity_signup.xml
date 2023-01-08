@@ -10,7 +10,7 @@
         android:id="@+id/tv_heading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Account Signup"
+        android:text="@string/account_signup"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -28,7 +28,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:focusable="true"
             android:focusableInTouchMode="true"
             >
@@ -44,14 +44,14 @@
                 android:textColorHint="#808080"
                 app:layout_constraintTop_toTopOf="parent"
                 >
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/emailField"
                     android:singleLine="true"
                     android:imeOptions="actionNext"
                     android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890@."
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Email"
+                    android:hint="@string/email"
                     android:gravity="center"
                     android:padding="10dp"
                     android:inputType="textEmailAddress"
@@ -68,14 +68,14 @@
                 android:layout_marginTop="10dp"
                 app:layout_constraintTop_toBottomOf="@+id/layout_email"
                 >
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/passwordField"
                     android:singleLine="true"
                     android:imeOptions="actionNext"
                     android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890`~!@#$%^&amp;*()-_+=[]{}?,.?/"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Password"
+                    android:hint="@string/password"
                     android:gravity="center"
                     android:padding="10dp"
                     android:inputType="textPassword"
@@ -92,14 +92,14 @@
                 android:layout_marginTop="10dp"
                 app:layout_constraintTop_toBottomOf="@+id/layout_password"
                 >
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/repasswordField"
                     android:singleLine="true"
                     android:imeOptions="actionDone"
                     android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890`~!@#$%^&amp;*()-_+=[]{}?,.?/"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Reenter Password"
+                    android:hint="@string/reenter_password"
                     android:gravity="center"
                     android:padding="10dp"
                     android:inputType="textPassword"
@@ -113,7 +113,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/layout_repassword"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:text="Sign Up"
+                android:text="@string/sign_up"
                 android:layout_marginTop="20dp"
                 app:layout_constraintWidth_percent="0.7"
                 android:elevation="2dp"

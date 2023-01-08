@@ -3,10 +3,15 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"os"
 )
 
 // main function
 func main() {
+	if len(os.Args) < 2 || os.Args[1] != "-d" {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
 	router := gin.Default()
 
 	router.GET("/users", getUsers)
@@ -33,7 +38,7 @@ func getUsers(c *gin.Context) {
 // return GETS all Sounds
 func getSounds(c *gin.Context) {
 	sounds := DBGetSounds()
-	if sounds != nil || len(sounds) != 0 {
+	if len(sounds) != 0 {
 		c.JSON(http.StatusOK, sounds)
 	} else {
 		c.AbortWithStatus(http.StatusNotFound)
@@ -52,8 +57,8 @@ func getUserByUserName(c *gin.Context) {
 
 // return GETS all Sounds that match the given PosterUserName
 func getSoundsByPosterUserName(c *gin.Context) {
-	sounds := DBGetSoundsByPosterUserName(c.Param("username"))
-	if sounds != nil || len(sounds) == 0 {
+	sounds := DBGetSoundsByPosterUserName(c.Param("posterusername"))
+	if len(sounds) != 0 {
 		c.JSON(http.StatusOK, sounds)
 	} else {
 		c.AbortWithStatus(http.StatusNotFound)
@@ -71,6 +76,7 @@ func postUser(c *gin.Context) {
 	}
 }
 
+// return POSTS a Sound
 func postSound(c *gin.Context) {
 	var snd Sound
 	if err := c.BindJSON(&snd); err != nil {

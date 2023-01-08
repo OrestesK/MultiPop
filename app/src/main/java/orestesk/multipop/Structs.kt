@@ -1,8 +1,8 @@
 package orestesk.multipop
 
 import com.google.gson.annotations.SerializedName
+
 data class User(
-    //FUCK UNSIGNED INTS OMG SPENT A DAY DEBUGGING THIS BECAUSE U_ID WAS UINT
     @SerializedName("uid")
     val U_Id: Int?,
     @SerializedName("username")
@@ -14,14 +14,14 @@ data class Sound(
     @SerializedName("uid")
     val U_Id: Int?,
     @SerializedName("posterusername")
-    val Posterusername: String,
+    val PosterUserName: String,
     @SerializedName("soundname")
-    val Soundname: String,
+    val SoundName: String,
     @SerializedName("description")
     val Description: String?,
     @SerializedName("datetime")
     val Datetime: String?,
     @SerializedName("length")
-    val length: String?,
+    val Length: String?,
     @SerializedName("file")
-    val File: ByteArray)
+    val File: String)

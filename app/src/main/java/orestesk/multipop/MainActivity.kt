@@ -1,16 +1,12 @@
 package orestesk.multipop
 
-import android.app.Activity
-import android.content.Intent
-import android.net.Uri
+import android.content.Context
+import android.media.MediaPlayer
+import android.media.MediaPlayer.OnCompletionListener
 import android.os.Bundle
-import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.View
+import android.widget.Button
 import android.widget.LinearLayout
-import android.widget.PopupWindow
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.android.synthetic.main.activity_main.*
@@ -19,56 +15,50 @@ import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity() {
-    private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result -> handleActivityResult(result) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        appContext = applicationContext
 
         btnGet.setOnClickListener {
-            lifecycleScope.launchWhenCreated {
-                textView.text = getUserByUserName("TestUser")?.UserName
-            }
+            textView.text = LoginActivity.userName
         }
 
         btnPost.setOnClickListener {
-            val createUser = CreateSoundFragment()
-            createUser.show(supportFragmentManager, "createUser")
-            lifecycleScope.launch(Dispatchers.Main) {
-                progressBar.visibility = View.VISIBLE
-                progressBar.visibility = View.INVISIBLE
-                textView.text = "HUH"
-            }
+            CreateSoundFragment().show(supportFragmentManager, "createUser")
         }
 
         btnSelect.setOnClickListener {
-            lifecycleScope.launchWhenCreated {
-                val intent = Intent()
-                    .setType("*/*")
-                    .setAction(Intent.ACTION_GET_CONTENT)
-                resultLauncher.launch(Intent.createChooser(intent, "Select a file"))
-            }
+            progressBar.visibility = View.VISIBLE
+            displaySounds()
+            progressBar.visibility = View.INVISIBLE
         }
     }
 
-    /*
-    private suspend fun doExpensiveWork() = withContext(Dispatchers.Default) {
-        Log.i(TAG, "doExpensiveWork coroutine thread: ${Thread.currentThread().name}")
-        val timeTakenMillis = measureTimeMillis { BigInteger.probablePrime(2200, Random()) }
-        "Time taken (ms): $timeTakenMillis"
-    }
-     */
+    private fun displaySounds(){
+        lifecycleScope.launch(Dispatchers.IO) {
+            val sounds = getSounds()
 
-    private fun handleActivityResult(result: ActivityResult){
-        val uri = result.data?.data
-        if(uri != null) {
-            if (result.resultCode == Activity.RESULT_OK) MainActivity.URI = result.data?.data
-            val file = contentResolver.openInputStream(uri)?.use { it.readBytes() }
+            launch(Dispatchers.Main) {
+                sounds?.let {
+                    findViewById<LinearLayout>(R.id.layout_sounds).removeAllViews()
+                    for (sound in sounds) {
+                        val btn = Button(appContext)
+                        btn.text = sound.SoundName
+                        btn.setOnClickListener {
+                            playDisplayedSound(btn, sound)
+                        }
+                        findViewById<LinearLayout>(R.id.layout_sounds).addView(btn)
+                    }
+                } ?: run {
+                    makeToast(appContext, "No Sounds")
+                }
+            }
         }
     }
 
     companion object{
-        const val TAG = "MainActivity"
-        var URI : Uri? = null
+        lateinit  var appContext: Context
     }
 }

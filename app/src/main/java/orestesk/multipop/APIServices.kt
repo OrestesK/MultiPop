@@ -42,8 +42,7 @@ suspend fun createSound(
             description,
             datetime,
             length,
-            file
+            encode64(file))
         )
-    )
     return if (creationResponse.isSuccessful) creationResponse.body() else null
 }

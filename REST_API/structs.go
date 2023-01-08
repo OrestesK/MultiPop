@@ -2,14 +2,28 @@ package main
 
 import (
 	"crypto/sha256"
+	"encoding/base64"
 	"encoding/hex"
 	"os"
 )
 
+// hashes strings in sha256
 func hash(val string) string {
 	sha := sha256.New()
 	sha.Write([]byte(val))
 	return hex.EncodeToString(sha.Sum(nil))
+}
+
+// encodes []byte to base64 String
+func encode64(val []byte) string {
+	file := base64.StdEncoding.EncodeToString(val)
+	return file
+}
+
+// decodes base64 String to []byte
+func decode64(val string) []byte {
+	file, _ := base64.StdEncoding.DecodeString(val)
+	return file
 }
 
 // fake main
@@ -30,16 +44,16 @@ func SaveFile(data []byte, name string) {
 
 type User struct {
 	U_Id         uint   `json:"uid"`
-	UserName     string `json:"username"`
-	UserPassword string `json:"userpassword"`
+	UserName     string `json:"username" binding:"required"`
+	UserPassword string `json:"userpassword" binding:"required"`
 }
 
 type Sound struct {
 	U_Id           uint   `json:"uid"`
-	PosterUserName string `json:"posterusername"`
-	SoundName      string `json:"soundname"`
+	PosterUserName string `json:"posterusername" binding:"required"`
+	SoundName      string `json:"soundname" binding:"required"`
 	Description    string `json:"description"`
 	DateTime       string `json:"datetime"`
-	Length         string `json:"length"`
-	File           []byte `json:"file"`
+	Length         int    `json:"length"`
+	File           string `json:"file" binding:"required"`
 }

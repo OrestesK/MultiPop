@@ -32,34 +32,34 @@ class SignupActivity : AppCompatActivity() {
 
     private fun signup(){
         val email = emailField.text.toString()
-        lifecycleScope.launch(Dispatchers.Main) {
+        lifecycleScope.launch(Dispatchers.IO) {
             val usr : User?
             try {
                 usr = getUserByUserName(email)
-            } catch (e: ConnectException)
-            {
-                LoginActivity.makeToast(this@SignupActivity, "DATABASE OFFLINE")
+            } catch (e: ConnectException) {
+                launch(Dispatchers.Main) {
+                    makeToast(this@SignupActivity, "DATABASE OFFLINE")
+                }
                 return@launch
             }
 
-
-            if(usr != null) {
-                passwordField.setText("")
-                LoginActivity.makeToast(this@SignupActivity, "User Already Exists")
-            }
-            else {
-                if (createUser(null, email, passwordField.text.toString()) == null){
-                    LoginActivity.makeToast(this@SignupActivity, "Signup Unsuccessful")
-                }
-                else{
-                    LoginActivity.makeToast(this@SignupActivity, "Signup Successful")
-                    startActivity(Intent(this@SignupActivity, LoginActivity::class.java))
+            launch(Dispatchers.Main) {
+                usr?.let {passwordField.setText("")
+                    makeToast(this@SignupActivity, "User Already Exists")
+                } ?: run{
+                    createUser(null, email, passwordField.text.toString())?.let {
+                        makeToast(this@SignupActivity, "Signup Successful")
+                        startActivity(Intent(this@SignupActivity, LoginActivity::class.java))
+                        finish()
+                    } ?: run {
+                        makeToast(this@SignupActivity, "Signup Unsuccessful")
+                    }
                 }
             }
         }
     }
     private fun validateInput() : Boolean {
-        if (!LoginActivity.validateInput(emailField, passwordField)) {
+        if (!validateUserCredentials(emailField, passwordField)) {
             return false
         }
         if (passwordField.text.toString() != repasswordField.text.toString()) {

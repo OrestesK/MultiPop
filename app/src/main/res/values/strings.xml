@@ -23,4 +23,13 @@
     <string name="login">Login</string>
     <string name="don_t_have_an_account">Don\'t have an account?</string>
     <string name="sign_up">Sign Up</string>
+    <string name="description">Description</string>
+    <string name="create">Create</string>
+    <string name="name">Name</string>
+    <string name="create_sound">Create Sound</string>
+    <string name="account_signup">Account Signup</string>
+    <string name="reenter_password">Reenter Password</string>
+    <string name="account_login">Account Login</string>
+    <string name="display_all_sounds">Display All Sounds</string>
+    <string name="who_am_i">Who Am I</string>
 </resources>

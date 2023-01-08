@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
+    android:gravity="center|top"
     tools:context=".MainActivity">
 
     <TextView
@@ -19,20 +19,28 @@
         android:id="@+id/btnGet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/do_api_requests"
+        android:text="@string/who_am_i"
         />
 
     <Button
         android:id="@+id/btnPost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/start_computation"
+        android:text="@string/create_sound"
         />
     <Button
         android:id="@+id/btnSelect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/select_file"
+        android:text="@string/display_all_sounds"
+        />
+
+    <LinearLayout
+        android:id="@+id/layout_sounds"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center|top"
         />
 
     <ProgressBar

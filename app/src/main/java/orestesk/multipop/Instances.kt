@@ -14,6 +14,7 @@ import javax.net.ssl.*
 
 private const val BASE_URL = "https://98.10.243.234:8080"
 class Instances {
+
     object RetrofitInstance {
         fun getInstance(): Retrofit {
             val mHttpLoggingInterceptor = HttpLoggingInterceptor()
@@ -21,7 +22,7 @@ class Instances {
 
             val mOkHttpClient = OkHttpClient
                 .Builder()
-                .addInterceptor(mHttpLoggingInterceptor)
+                //.addInterceptor(mHttpLoggingInterceptor)
                 .sslSocketFactory(
                     createCertificate(LoginActivity.appContext.resources.openRawResource(R.raw.cert)).socketFactory,
                     systemDefaultTrustManager()!!
@@ -71,5 +72,6 @@ class Instances {
             } catch (e: GeneralSecurityException) {
                 throw AssertionError() // no TLS,  give up.
             }
-        }}
+        }
+    }
 }
