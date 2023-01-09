@@ -35,7 +35,7 @@
         <activity
             android:name=".SignupActivity"
             android:exported="true"
-            android:theme="@style/Theme.Multipop"/>
+            android:theme="@style/Theme.Multipop.NoActionBar"/>
 
         <activity
             android:name=".MainActivity"

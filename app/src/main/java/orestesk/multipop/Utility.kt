@@ -13,11 +13,12 @@ const val MIN_PASSWORD_LENGTH = 2
 const val MAX_USERNAME_LENGTH = 15
 const val MAX_SOUNDNAME_LENGTH = 20
 
-// if I want to overlap sounds then create a new mediaPlayer for each sound, if you do also call release()
-val mediaPlayer = MediaPlayer()
-
-fun createInstantSound(context: Context, uri: Uri){
-    mediaPlayer.reset()
+fun previewSound(context: Context, uri: Uri){
+    val mediaPlayer = MediaPlayer()
+    mediaPlayer.setOnCompletionListener { mp ->
+        mp.reset()
+        mp.release()
+    }
     mediaPlayer.setDataSource(context, uri)
     mediaPlayer.prepare()
     mediaPlayer.start()
@@ -26,6 +27,7 @@ fun createInstantSound(context: Context, uri: Uri){
 fun playDisplayedSound(btn :Button, sound: Sound){
     val mediaPlayer = MediaPlayer()
     mediaPlayer.setDataSource("data:audio/mp3;base64," + sound.File)
+
     val timerUpdater = Thread(){
         Thread.sleep(100)
         while (mediaPlayer.isPlaying) {
@@ -34,12 +36,14 @@ fun playDisplayedSound(btn :Button, sound: Sound){
             if(mediaPlayer.isPlaying) Thread.sleep(1000)
         }
     }
+
     mediaPlayer.setOnCompletionListener { mp ->
         timerUpdater.join()
         mp.reset()
         mp.release()
         btn.text = sound.SoundName
     }
+
     mediaPlayer.setOnPreparedListener {
         mediaPlayer.start()
         timerUpdater.start()
@@ -49,15 +53,12 @@ fun playDisplayedSound(btn :Button, sound: Sound){
 }
 
 fun makeToast(activity : Context, message : String){
-    val toast = Toast.makeText(activity, message, Toast.LENGTH_SHORT)
-    //toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
-    toast.show()
+    Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
 }
 
 fun hashSha256(string: String): String {
-    val digest = MessageDigest.getInstance("SHA-256")
-    digest.update(string.toByteArray())
-    val bytes = digest.digest()
+    val md = MessageDigest.getInstance("SHA-256")
+    val bytes = md.digest(string.toByteArray())
     val sb = StringBuffer()
     for (i in bytes.indices) {
         val hex = Integer.toHexString(0xFF and bytes[i].toInt())
@@ -71,10 +72,6 @@ fun hashSha256(string: String): String {
 
 fun encode64(file : ByteArray): String{
     return Base64.getEncoder().encodeToString(file)
-}
-
-fun decode64(file: String): ByteArray{
-    return Base64.getDecoder().decode(file)
 }
 
 fun validateUserCredentials(email: EditText, password: EditText): Boolean {

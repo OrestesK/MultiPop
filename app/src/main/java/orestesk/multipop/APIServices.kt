@@ -20,8 +20,8 @@ suspend fun getSoundsByPosterUserName(posterUserName: String): List<Sound>?{
     return if (soundsResponse.isSuccessful) soundsResponse.body() else null
 }
 
-suspend fun createUser(uid: Int?, username: String, tempPassword: String) : User?{
-    val creationResponse = apiInterface.postUser(User(uid, username, hashSha256(tempPassword)))
+suspend fun createUser(uid: Int?, username: String, password: String) : User?{
+    val creationResponse = apiInterface.postUser(User(uid, username, password))
     return if (creationResponse.isSuccessful) creationResponse.body() else null
 }
 

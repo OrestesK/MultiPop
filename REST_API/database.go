@@ -109,7 +109,7 @@ func DBGetSoundsByPosterUserName(posterUserName string) []Sound {
 }
 
 func DBAddUser(usr User) {
-	_, err := db.Exec("INSERT INTO Users (UserName, UserPassword) VALUES (?, ?)", usr.UserName, hash(usr.UserPassword))
+	_, err := db.Exec("INSERT INTO Users (UserName, UserPassword) VALUES (?, ?)", usr.UserName, usr.UserPassword)
 	if err != nil {
 		panic(err.Error())
 	}

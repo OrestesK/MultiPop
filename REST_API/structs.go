@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-// hashes strings in sha256
+// hashes strings in sha256 (not used as hashing is client-side)
 func hash(val string) string {
 	sha := sha256.New()
 	sha.Write([]byte(val))
@@ -24,11 +24,6 @@ func encode64(val []byte) string {
 func decode64(val string) []byte {
 	file, _ := base64.StdEncoding.DecodeString(val)
 	return file
-}
-
-// fake main
-func testmain() {
-	SaveFile(LoadFile("./file_example_MP3_2MG.mp3"), "test.mp3")
 }
 
 // stores a file as []byte

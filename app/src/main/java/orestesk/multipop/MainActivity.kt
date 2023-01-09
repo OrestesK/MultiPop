@@ -1,8 +1,6 @@
 package orestesk.multipop
 
 import android.content.Context
-import android.media.MediaPlayer
-import android.media.MediaPlayer.OnCompletionListener
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -22,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         appContext = applicationContext
 
         btnGet.setOnClickListener {
-            textView.text = LoginActivity.userName
+            textView.text = LoginActivity.preferences.username
         }
 
         btnPost.setOnClickListener {

@@ -19,28 +19,35 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
-
         appContext = applicationContext
+        preferences = Preferences(appContext)
+
+        if(preferences.logged){
+            login(preferences.username, preferences.password)
+        }
+
+        setContentView(R.layout.activity_login)
 
         emailField = findViewById(R.id.emailField)
         passwordField = findViewById(R.id.passwordField)
 
         btn_login.setOnClickListener {
             if(validateUserCredentials(emailField, passwordField)){
-                login()
+                login(emailField.text.toString(), passwordField.text.toString())
             }
         }
+
         btn_signup.setOnClickListener {
             startActivity(Intent(this, SignupActivity::class.java))
+            finish()
         }
     }
 
-    private fun login() {
+    private fun login(email: String, password: String) {
         lifecycleScope.launch(Dispatchers.IO) {
             val usr: User?
             try {
-                usr = getUserByUserName(emailField.text.toString())
+                usr = getUserByUserName(email)
             } catch (e: ConnectException) {
                 launch(Dispatchers.Main) {
                     makeToast(appContext, "DATABASE OFFLINE")
@@ -50,11 +57,11 @@ class LoginActivity : AppCompatActivity() {
 
             launch(Dispatchers.Main) {
                 usr?.let{
-                    val password = passwordField.text.toString()
-                    if (hashSha256(password) == usr.UserPassword) {
+                    val hashPass = if (preferences.logged) preferences.password else hashSha256(password)
+                    if (hashPass != usr.UserPassword) {
                         Toast.makeText(appContext, "Wrong Password", Toast.LENGTH_SHORT).show()
                     } else {
-                        LoginActivity.userName = usr.UserName
+                        preferences.setUser(usr)
                         makeToast(appContext, "Login Successful")
                         startActivity(Intent(appContext, MainActivity::class.java))
                         finish()
@@ -69,7 +76,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     companion object{
-        lateinit var userName : String
-        lateinit  var appContext: Context
+        lateinit var preferences : Preferences
+        lateinit var appContext: Context
     }
 }

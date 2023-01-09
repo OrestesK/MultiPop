@@ -64,7 +64,8 @@ class CreateSoundFragment : DialogFragment() {
     private fun create(name: String, description: String){
         val file = cr.openInputStream(uri)?.use { it.readBytes() }
         lifecycleScope.launch(Dispatchers.IO) {
-                createSound(null, LoginActivity.userName, name, description, Timestamp(Date().time).toString(), null, file!!)
+                createSound(null, LoginActivity.preferences.username, name, description, Timestamp(Date().time).toString(), null, file!!)
+                dismiss()
         }
     }
 
@@ -91,7 +92,7 @@ class CreateSoundFragment : DialogFragment() {
             val filename = uri.path?.split("/")!!
             btnSelect.text = filename[filename.size - 1]
 
-            createInstantSound(appContext, uri)
+            previewSound(appContext, uri)
         }
     }
 }
